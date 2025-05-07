@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import {ip} from "@/utild"
 
 interface Eleccion {
   id: number;
@@ -20,7 +21,13 @@ export default function EleccionesPage() {
   const [elecciones, setElecciones] = useState<Eleccion[]>([]);
   const [formulas, setFormulas] = useState<Formula[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    nombre: string;
+    fecha_inicio: string;
+    fecha_fin: string;
+    tipo: string;
+    formula_id: number | null;
+  }>({
     nombre: '',
     fecha_inicio: '',
     fecha_fin: '',
@@ -29,14 +36,14 @@ export default function EleccionesPage() {
   });
 
   const fetchElecciones = () => {
-    fetch('http://192.168.0.4:5000/elecciones')
+    fetch(`${ip}/elecciones`)
       .then(res => res.json())
       .then(data => setElecciones(data))
       .catch(err => console.error('Error fetching elecciones:', err));
   };
 
   const fetchFormulas = () => {
-    fetch('http://192.168.0.4:5000/formulas')
+    fetch(`${ip}/formulas`)
       .then(res => res.json())
       .then(data => setFormulas(data))
       .catch(err => console.error('Error fetching formulas:', err));
@@ -48,7 +55,7 @@ export default function EleccionesPage() {
   }, []);
 
   const handleCreate = () => {
-    fetch('http://192.168.0.4:5000/elecciones', {
+    fetch(`${ip}/elecciones`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),

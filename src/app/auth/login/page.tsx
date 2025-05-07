@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
+import {ip} from "@/utild"
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = () => {
-    fetch('http://192.168.0.4:5000/auth/login', {
+    fetch(`${ip}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

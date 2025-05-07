@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import {ip} from "@/utild"
 
 export default function RegistroPage() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function RegistroPage() {
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleRegister = () => {
-    fetch('http://192.168.0.4:5000/auth/singUp', {
+    fetch(`${ip}/auth/singUp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
