@@ -21,7 +21,7 @@ export default function LoginPage() {
       .then((data) => {
         if (data.Mensaje === 'Inicio de sesión exitoso' && data.JWT) {
           document.cookie = `token=${data.JWT}; path=/`;
-          router.push('/dashboard/home');
+          router.push('/dashboard/');
         } else {
           setErrorMessage(data.Error || 'Credenciales incorrectas');
           setError(true);
