@@ -56,7 +56,7 @@ export default function EleccionesPage() {
               onClick={() => setShowModal(true)}
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg"
             >
-              Crear nueva
+              Agregar Partido
             </button>
           </div>
     
@@ -71,8 +71,9 @@ export default function EleccionesPage() {
                   className="block p-4 bg-white rounded-xl shadow hover:shadow-md transition"
                 >
                   <h2 className="text-xl font-semibold text-gray-800">{partido.siglas}</h2>
-                  <p className="text-gray-600 text-sm">{partido.nombre}</p>
-                  <img src={partido.logo_url} alt={partido.nombre} className="w-16 h-16 object-contain mt-2" />
+                  <p className="text-gray-600 text-sm">
+                    {partido.nombre}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -93,7 +94,7 @@ export default function EleccionesPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Logo</label>
-            <input type="text" placeholder="Logo" value={form.logo_url} onChange={e => setForm({ ...form, logo_url: e.target.value })} className="w-full border px-4 py-2 rounded" />
+            <input type="text" placeholder="Logo" value={form.nombre} onChange={e => setForm({ ...form, logo_url: e.target.value })} className="w-full border px-4 py-2 rounded" />
           </div>
         </div>
         <div className="mt-6 flex justify-end space-x-4">
