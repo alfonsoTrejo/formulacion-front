@@ -18,7 +18,6 @@ export default function DashboardLayout({
   const navLinks = [
     { href: '/dashboard/elecciones', label: 'Elecciones' },
     { href: '/dashboard/partidos', label: 'Partidos' },
-    { href: '/dashboard/formulas', label: 'Fórmulas' },
   ];
 
   const handleLogout = () => {
