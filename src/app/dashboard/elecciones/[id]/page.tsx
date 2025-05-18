@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ip } from '@/utild';
@@ -34,26 +34,25 @@ export default function EleccionDetailPage({ params }: { params: { id: string } 
   const [candidatos, setCandidatos] = useState<Candidato[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
         
-        // Fetch elección data
         const eleccionRes = await fetch(`${ip}/elecciones/${params.id}`);
         if (!eleccionRes.ok) throw new Error('Elección no encontrada');
         const eleccionData = await eleccionRes.json();
         setEleccion(eleccionData);
 
-        // Fetch fórmula data if exists
         if (eleccionData.formula_id) {
           const formulaRes = await fetch(`${ip}/formulas/${eleccionData.formula_id}`);
           if (formulaRes.ok) {
             const formulaData = await formulaRes.json();
             setFormula(formulaData);
 
-            // Fetch candidatos for this formula
             const candidatosRes = await fetch(`${ip}/formulas/${eleccionData.formula_id}/candidatos`);
             if (candidatosRes.ok) {
               const candidatosData = await candidatosRes.json();
@@ -73,23 +72,24 @@ export default function EleccionDetailPage({ params }: { params: { id: string } 
   }, [params.id]);
 
   const handleDelete = async () => {
-    if (confirm('¿Estás seguro de que quieres eliminar esta elección?')) {
-      try {
-        const res = await fetch(`${ip}/elecciones/${params.id}`, {
-          method: 'DELETE',
-        });
-        
-        if (res.ok) {
-          router.push('/dashboard/elecciones');
-        } else {
-          throw new Error('Error al eliminar la elección');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error al eliminar');
-        console.error('Delete error:', err);
+    try {
+      const res = await fetch(`${ip}/elecciones/${params.id}`, {
+        method: 'DELETE',
+      });
+      
+      if (res.ok) {
+        router.push('/dashboard/elecciones');
+      } else {
+        throw new Error('Error al eliminar la elección');
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al eliminar');
+      console.error('Delete error:', err);
     }
   };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   if (isLoading) return <div className="p-8 text-center">Cargando...</div>;
   if (error) return <div className="p-8 text-red-600">Error: {error}</div>;
@@ -108,7 +108,7 @@ export default function EleccionDetailPage({ params }: { params: { id: string } 
               Editar
             </Link>
             <button
-              onClick={handleDelete}
+              onClick={openModal}
               className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
             >
               Eliminar
@@ -116,6 +116,37 @@ export default function EleccionDetailPage({ params }: { params: { id: string } 
           </div>
         </div>
 
+{/* Modal de confirmación */}
+{isModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    {/* Fondo borroso sin afectar el modal */}
+    <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+
+    {/* Contenedor del modal */}
+    <div ref={modalRef} className="relative bg-white p-8 rounded-lg shadow-xl w-full max-w-sm z-10">
+      <p className="text-gray-900 text-lg mb-6">
+        ¿Estás seguro de que quieres eliminar esta elección? Esta acción no se puede deshacer.
+      </p>
+      <div className="flex justify-end space-x-4">
+        <button
+          onClick={closeModal}
+          className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={() => {
+            handleDelete();
+            closeModal();
+          }}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         <div className="bg-white rounded-xl shadow p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-900">Información General</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
