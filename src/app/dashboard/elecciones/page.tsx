@@ -10,6 +10,7 @@ interface Eleccion {
   fecha_inicio: string;
   fecha_fin: string;
   tipo: string;
+  numero_escano: number;
 }
 
 interface Formula {
@@ -25,13 +26,13 @@ export default function EleccionesPage() {
     nombre: string;
     fecha_inicio: string;
     fecha_fin: string;
-    tipo: string;
+    numero_escano: string;
     formula_id: number | null;
   }>({
     nombre: '',
     fecha_inicio: '',
     fecha_fin: '',
-    tipo: '',
+    numero_escano: '',
     formula_id: null,
   });
 
@@ -63,7 +64,7 @@ export default function EleccionesPage() {
       .then(res => res.json())
       .then(() => {
         setShowModal(false);
-        setForm({ nombre: '', fecha_inicio: '', fecha_fin: '', tipo: '', formula_id: null });
+        setForm({ nombre: '', fecha_inicio: '', fecha_fin: '', numero_escano: '', formula_id: null });
         fetchElecciones();
       })
       .catch(err => console.error('Error al crear elección:', err));
@@ -118,8 +119,8 @@ export default function EleccionesPage() {
         <input type="date" value={form.fecha_fin} onChange={e => setForm({ ...form, fecha_fin: e.target.value })} className="w-full border px-4 py-2 rounded" />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Tipo</label>
-        <input type="text" placeholder="Tipo" value={form.tipo} onChange={e => setForm({ ...form, tipo: e.target.value })} className="w-full border px-4 py-2 rounded" />
+        <label className="block text-sm font-medium text-gray-700">Escaño</label>
+        <input type="text" placeholder="Nombre" value={form.numero_escano} onChange={e => setForm({ ...form, numero_escano: e.target.value })} className="w-full border px-4 py-2 rounded" />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">Fórmula</label>

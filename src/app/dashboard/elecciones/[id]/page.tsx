@@ -10,7 +10,7 @@ interface Eleccion {
   nombre: string;
   fecha_inicio: string;
   fecha_fin: string;
-  tipo: string;
+  numero_escano: string;
   formula_id: number;
 }
 
@@ -120,8 +120,8 @@ export default function EleccionDetailPage({ params }: { params: { id: string } 
           <h2 className="text-xl font-semibold mb-4 text-gray-900">Información General</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-900">Tipo de elección</p>
-              <p className="font-medium text-gray-500">{eleccion.tipo}</p>
+              <p className="text-sm text-gray-900">Número de Escaño</p>
+              <p className="font-medium text-gray-500">{eleccion.numero_escano}</p>
             </div>
             <div>
               <p className="text-sm text-gray-900">Fórmula asociada</p>
