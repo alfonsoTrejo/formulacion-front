@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {ip} from "@/utild"
+import {ip} from "@/utild";
+import { useRouter } from 'next/navigation';
 
 interface Eleccion {
   id: number;
@@ -35,10 +36,37 @@ export default function EleccionesPage() {
     numero_escano: '',
     formula_id: null,
   });
+  const router = useRouter();
+
+  // Función para obtener el token del almacenamiento local
+  const getToken = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  };
 
   const fetchElecciones = () => {
-    fetch(`${ip}/elecciones`)
-      .then(res => res.json())
+    const token = getToken();
+    if (!token) {
+      router.push('/login'); // Redirigir si no hay token
+      return;
+    }
+
+    fetch(`${ip}/elecciones`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (res.status === 401) {
+          // Token inválido o expirado
+          localStorage.removeItem('token');
+          router.push('/login');
+          return;
+        }
+        return res.json();
+      })
       .then(data => setElecciones(data))
       .catch(err => console.error('Error fetching elecciones:', err));
   };
@@ -56,9 +84,10 @@ export default function EleccionesPage() {
   }, []);
 
   const handleCreate = () => {
+    const token = getToken();
     fetch(`${ip}/elecciones`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(form),
     })
       .then(res => res.json())

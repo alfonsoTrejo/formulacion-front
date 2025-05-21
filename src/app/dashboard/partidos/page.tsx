@@ -94,7 +94,7 @@ export default function EleccionesPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Logo</label>
-            <input type="text" placeholder="Logo" value={form.nombre} onChange={e => setForm({ ...form, logo_url: e.target.value })} className="w-full border px-4 py-2 rounded" />
+            <input type="text" placeholder="Logo" value={form.logo_url} onChange={e => setForm({ ...form, logo_url: e.target.value })} className="w-full border px-4 py-2 rounded" />
           </div>
         </div>
         <div className="mt-6 flex justify-end space-x-4">
