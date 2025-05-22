@@ -19,6 +19,7 @@ export default function DashboardPage() {
     const token = cookies.token;
     if (token) {
       // Aquí podrías decodificar el token para obtener el nombre del usuario
+      localStorage.setItem('token', token);
       setUsername('Jorge Araujo');
     }
   }, []);
